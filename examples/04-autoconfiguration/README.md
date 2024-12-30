@@ -7,3 +7,4 @@ Run the `run.sh` script to run the application. In this script we define environ
 which are read by the autoconfigure module to automatically configure the SDK.
 
 More specifically, we configure the type of trace exporter to `console` so that traces will be printed to console.
+
