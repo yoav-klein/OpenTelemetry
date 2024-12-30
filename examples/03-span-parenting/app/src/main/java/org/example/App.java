@@ -20,7 +20,13 @@ public class App {
     
     public static void main(String[] args) {
 
-        spanParenting();   
+        spanParenting();
+
+        try {
+            Thread.sleep(1000);
+        } catch(InterruptedException e) {
+            System.out.println("interrupt");
+        }
     }
     
     private static Tracer  getTracer() {
