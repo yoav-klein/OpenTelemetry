@@ -47,8 +47,9 @@ public class App {
             // Add attributes and events
             span.setAttribute("key", "value");
             span.addEvent("Operation started");
-            span.setStatus(StatusCode.ERROR);
+            span.setStatus(StatusCode.OK);
         } catch (InterruptedException e) {
+            span.setStatus(StatusCode.ERROR);
             span.recordException(e);
         } finally {
             System.out.println("Ending traced operation..");
