@@ -22,8 +22,8 @@ public class OpenTelemetryConfig {
       .setEndpoint("http://localhost:14250") // Replace with your Jaeger endpoint
       .build();
 
-      //return SpanExporter.composite(jaeger, spanExporter);
-      return jaeger;
+      return SpanExporter.composite(jaeger, spanExporter);
+      
     })
     .build().getOpenTelemetrySdk();
   }
