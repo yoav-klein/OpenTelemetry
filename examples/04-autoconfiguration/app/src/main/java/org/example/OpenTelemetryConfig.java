@@ -14,7 +14,7 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
 public class OpenTelemetryConfig {
-  public static OpenTelemetry autoconfiguredSdk() {
+  public static OpenTelemetry initialize() {
     return AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
   }
 }
