@@ -31,11 +31,10 @@ public class App {
         return tracer;
     }
         
-    public static void tracing1() {
-        // Initialize OpenTelemetry
+    public static void simpleExample() {
         
-        Tracer tracer = getTracer();
         // Get a Tracer instance
+        Tracer tracer = getTracer();
 
         // Start a new span
         Span span = tracer.spanBuilder("exampleOperation").startSpan();
