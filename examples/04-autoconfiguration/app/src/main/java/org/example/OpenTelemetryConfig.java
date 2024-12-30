@@ -15,7 +15,7 @@ import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
 public class OpenTelemetryConfig {
   public static OpenTelemetry initialize() {
-    return AutoConfiguredOpenTelemetrySdk.initialize().getOpenTelemetrySdk();
+    return AutoConfiguredOpenTelemetrySdk.builder().build().addSpanExporterCustomizer((spanExporter, configProperties) -> spanExporter).getOpenTelemetrySdk();
   }
 }
 
