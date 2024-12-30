@@ -55,6 +55,7 @@ public class App {
     }
     
     private static int doWork() {
+        Tracer tracer = getTracer();
         Span doWorkSpan = tracer.spanBuilder("doWork").startSpan();
         try (Scope scope = doWorkSpan.makeCurrent()) {
             int result = 0;
