@@ -15,7 +15,13 @@ import io.opentelemetry.sdk.autoconfigure.AutoConfiguredOpenTelemetrySdk;
 
 public class OpenTelemetryConfig {
   public static OpenTelemetry initialize() {
-    return AutoConfiguredOpenTelemetrySdk.builder().addSpanExporterCustomizer((spanExporter, configProperties) -> spanExporter).build().getOpenTelemetrySdk();
+    return AutoConfiguredOpenTelemetrySdk.builder().
+    addSpanExporterCustomizer((spanExporter, configProperties) -> {
+      return JaegerGrpcSpanExporter.builder()
+      .setEndpoint("http://localhost:14250") // Replace with your Jaeger endpoint
+      .build();
+    })
+    .build().getOpenTelemetrySdk();
   }
 }
 
