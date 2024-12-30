@@ -31,7 +31,7 @@ public class OpenTelemetryConfig {
         // Set up Tracer Provider
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
             .setResource(Resource.getDefault().toBuilder()
-                .put("SERVICE", "my-service")
+                .put("service.name", "my-service")
                 .build())
             .addSpanProcessor(spanProcessor)
             .build();
