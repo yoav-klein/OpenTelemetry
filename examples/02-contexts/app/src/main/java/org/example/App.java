@@ -32,7 +32,7 @@ public class App {
         Context current = Context.current();
         
         // a Context is immutable, so adding key-value pairs to a Context creates new Context
-        Context newContext = context.with(key1, "value1").with(key2, "value2");
+        Context newContext = current.with(key1, "value1").with(key2, "value2");
         System.out.println(newContext.get(key1));
         System.out.println(newContext.get(key2));
 
