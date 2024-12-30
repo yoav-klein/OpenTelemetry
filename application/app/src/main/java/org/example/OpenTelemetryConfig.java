@@ -19,15 +19,9 @@ public class OpenTelemetryConfig {
         JaegerGrpcSpanExporter jaegerExporter = JaegerGrpcSpanExporter.builder()
             .setEndpoint("http://localhost:14250") // Replace with your Jaeger endpoint
             .build();
-
         
-
-        // Configure Span Processor
-        //BatchSpanProcessor spanProcessor = BatchSpanProcessor.builder(new MyExporter()).build();
-        //SimpleSpanProcessor spanProcessor = SimpleSpanProcessor.builder(new MyExporter()).build();
         SimpleSpanProcessor spanProcessor = SimpleSpanProcessor.builder(jaegerExporter).build();
-        //
-
+        
         // Set up Tracer Provider
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
             .setResource(Resource.getDefault().toBuilder()
