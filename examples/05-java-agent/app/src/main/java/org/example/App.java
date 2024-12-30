@@ -43,10 +43,7 @@ public class App
 
             
             os.close();
-            while(true) {
-                Thread.sleep(4000);
-            }
-
+           
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (S3Exception e) {

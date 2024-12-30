@@ -43,3 +43,9 @@ tasks.named('test') {
     // Use TestNG for unit tests.
     useTestNG()
 }
+
+tasks.run {
+    jvmArgs = ["-javaagent:${projectDir}/agent.jar"]
+}
+
+
