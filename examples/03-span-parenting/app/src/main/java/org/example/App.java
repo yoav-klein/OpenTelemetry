@@ -35,8 +35,7 @@ public class App {
         Span span = getTracer().spanBuilder("rootSpan").startSpan();
         try {
             // Start a child span, explicitly setting the parent.
-            Span childSpan = tracer
-                .spanBuilder("span child")
+            Span childSpan = tracer.spanBuilder("span child")
                 // Explicitly set parent.
                 .setParent(span.storeInContext(Context.current()))
                 .startSpan();
