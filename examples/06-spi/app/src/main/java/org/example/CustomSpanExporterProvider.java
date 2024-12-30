@@ -17,6 +17,6 @@ public class CustomSpanExporterProvider implements ConfigurableSpanExporterProvi
 
   @Override
   public String getName() {
-    return "custom-exporter";
+    return "jaeger-exporter";
   }
 }

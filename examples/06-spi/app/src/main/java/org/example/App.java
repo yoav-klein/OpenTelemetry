@@ -8,7 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
+import java.util.ServiceLoader;
 
+import io.opentelemetry.sdk.autoconfigure.spi.traces.ConfigurableSpanExporterProvider;
 
 public class App 
 {
@@ -23,8 +25,17 @@ public class App
         bar();
     }
 
+    public static void loadService() {
+        ServiceLoader<ConfigurableSpanExporterProvider> serviceLoader = ServiceLoader.load(ConfigurableSpanExporterProvider.class);
+
+        for(ConfigurableSpanExporterProvider p : serviceLoader) {
+            System.out.println(p.getName());
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException
     {   
-        foo();
+        loadService();
+        //foo();
     }
 }
