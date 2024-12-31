@@ -24,12 +24,12 @@ dependencies {
 
     // OpenTelemetry SDK (implementation)
     implementation 'io.opentelemetry:opentelemetry-sdk:1.45.0'
-
+    
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.45.0'
+    
     implementation 'io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:1.45.0'
-    // OpenTelemetry Exporter (for Jaeger in this example)
-    implementation 'io.opentelemetry:opentelemetry-exporter-jaeger:1.30.0'
-
-    implementation 'io.opentelemetry:opentelemetry-exporter-logging:1.45.0'
+    
+    //implementation 'io.opentelemetry:opentelemetry-exporter-logging:1.45.0'
 
     // This dependency is used by the application.
     implementation libs.guava
