@@ -1,7 +1,9 @@
 #!/bin/bash
 
-docker run -d --name jaeger \
-  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+docker run --rm -d --name jaeger \
+  -e COLLECTOR_OTLP_ENABLED=true \
+  -p 4318:4318 \
+  -p 4317:4317 \
   -p 5775:5775/udp \
   -p 6831:6831/udp \
   -p 6832:6832/udp \
