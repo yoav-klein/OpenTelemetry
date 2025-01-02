@@ -75,15 +75,17 @@ public class App {
 
             try(Scope scope = extractedContext.makeCurrent()) {
                 Span span = tracer.spanBuilder("/ GET").startSpan();
-                System.out.println("Do work");
+                try {
+                    System.out.println("Do work");
+                    String response = "Hello from server";
+                    exchange.sendResponseHeaders(200, response.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
+                } finally {
+                    span.end();
+                }
                 
-            } finally {
-                String response = "Hello from server";
-                exchange.sendResponseHeaders(200, response.length());
-                OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
-                span.end();
             }
 
         }
