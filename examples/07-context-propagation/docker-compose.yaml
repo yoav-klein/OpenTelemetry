@@ -4,13 +4,13 @@ services:
         container_name: server
         build: server
         environment:
-            OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://jaeger:4318/v1/traces"
+            OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
     client:
         container_name: client
         build: client
         environment:
             SERVER_ENDPOINT: "http://server:8080"
-            OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: "http://jaeger:4318/v1/traces"
+            OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
 
     jaeger:
         image: jaegertracing/all-in-one:1.44

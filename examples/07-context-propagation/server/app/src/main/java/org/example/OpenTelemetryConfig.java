@@ -12,10 +12,13 @@ public class OpenTelemetryConfig {
 
     public static OpenTelemetry initialize() {
 
-        String otelTracesEndpoint = System.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT");
-        if(otelTracesEndpoint == null) {
-            otelTracesEndpoint = "http://localhost:4318/v1/traces";
+        String otelExporterEndpoint = System.getenv("OTEL_EXPORTER_OTLP_ENDPOINT");
+        
+        if(otelExporterEndpoint == null) {
+            otelExporterEndpoint = "http://localhost:4318";
         }
+
+        String otelTracesEndpoint = otelExporterEndpoint + "/v1/traces";
        
         SimpleSpanProcessor spanProcessor = SimpleSpanProcessor.builder(OtlpHttpSpanExporter.builder()
                 .setEndpoint(otelTracesEndpoint)
