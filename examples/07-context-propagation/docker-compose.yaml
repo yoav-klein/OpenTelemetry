@@ -1,0 +1,11 @@
+name: context-propagation
+services:
+    server:
+        build: server
+
+    client:
+        build: client
+
+    jaeger:
+
+
