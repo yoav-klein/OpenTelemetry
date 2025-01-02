@@ -73,8 +73,8 @@ public class App {
 
             Context extractedContext = propagators.getTextMapPropagator().extract(Context.current(), exchange, TEXT_MAP_GETTER);
 
-            Span span = tracer.spanBuilder("/ GET").startSpan();;
             try(Scope scope = extractedContext.makeCurrent()) {
+                Span span = tracer.spanBuilder("/ GET").startSpan();
                 System.out.println("Do work");
                 
             } finally {
