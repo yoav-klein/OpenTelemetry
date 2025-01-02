@@ -11,10 +11,15 @@ import io.opentelemetry.sdk.resources.Resource;
 public class OpenTelemetryConfig {
 
     public static OpenTelemetry initialize() {
+
+        String otelTracesEndpoint = System.getenv("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT");
+        if(otelTracesEndpoint == null) {
+            otelTracesEndpoint = "http://localhost:4318/v1/traces";
+        }
        
         SimpleSpanProcessor spanProcessor = SimpleSpanProcessor.builder(OtlpHttpSpanExporter.builder()
-                //.setEndpoint("http://localhost:4318")
-            .build())
+                .setEndpoint(otelTracesEndpoint)
+                .build())
             .build();
         
         // Set up Tracer Provider

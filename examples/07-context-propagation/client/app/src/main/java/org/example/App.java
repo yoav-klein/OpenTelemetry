@@ -65,9 +65,7 @@ public class App {
 
                 Thread.sleep(5000);
             }
-
         }
-
     }
 
     private static class HttpRequestSetter implements TextMapSetter<HttpRequest.Builder> {
