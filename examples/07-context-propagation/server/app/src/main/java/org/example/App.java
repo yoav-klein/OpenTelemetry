@@ -6,6 +6,7 @@ package org.example;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.Headers;
 
 import io.opentelemetry.api.baggage.propagation.W3CBaggagePropagator;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
@@ -45,15 +46,25 @@ public class App {
         }
 
         @Override
-        public void handle(HttpExchange exchage) throws IOException {
-            Context extractedContext = propagators.getTextMapPropagator().extract(Context.current(), exchage, TEXT_MAP_GETTER);
+        public void handle(HttpExchange exchange) throws IOException {
+            // debug - see headers
+            System.out.println("=== headers");
+            Iterable<String> headers = exchange.getRequestHeaders().keySet();
+
+            for(String header : headers) {
+                System.out.println(String.format("%s: %s", header, exchange.getRequestHeaders().get(header)));
+            }
+
+
+
+            Context extractedContext = propagators.getTextMapPropagator().extract(Context.current(), exchange, TEXT_MAP_GETTER);
 
             try(Scope scope = extractedContext.makeCurrent()) {
                 
             } finally {
                 String response = "Hello from server";
-                exchage.sendResponseHeaders(200, response.length());
-                OutputStream os = exchage.getResponseBody();
+                exchange.sendResponseHeaders(200, response.length());
+                OutputStream os = exchange.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
             }
