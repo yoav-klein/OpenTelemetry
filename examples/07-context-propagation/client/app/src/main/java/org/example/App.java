@@ -13,13 +13,26 @@ import java.net.http.HttpResponse.BodyHandlers;
 
 import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapPropagator;
+import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.baggage.propagation.W3CBaggagePropagator;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.TextMapSetter;
 import io.opentelemetry.context.Context;
+import io.opentelemetry.context.Scope;
 
 
 public class App {
+
+
+    private static Tracer  getTracer() {
+
+        OpenTelemetry otel = OpenTelemetryConfig.initialize();
+
+        Tracer tracer = otel.getTracer("exampleTracer");
+        return tracer;
+    }
 
     public static void main(String[] args) throws Exception {
         String serverEndpoint = System.getenv("SERVER_ENDPOINT");
@@ -27,27 +40,32 @@ public class App {
             throw new IllegalArgumentException("No server endpoint");
         }
 
+        // Get a Tracer instance
+        Tracer tracer = getTracer();
+
         ContextPropagators propagators = ContextPropagators.create(
             TextMapPropagator.composite(
                 W3CTraceContextPropagator.getInstance(), W3CBaggagePropagator.getInstance()
-            ));
+            )
+        );
 
         HttpClient client = HttpClient.newBuilder()
             .followRedirects(Redirect.NORMAL)
             .build();
-
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(URI.create(serverEndpoint));
-        
-        propagators.getTextMapPropagator().inject(Context.current(), reqBuilder, new HttpRequestSetter());
-        
+
         while(true) {
-            HttpRequest request = reqBuilder.build();
-            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+            try(Scope scope = tracer.spanBuilder("exampleOperation").startSpan().makeCurrent()) {
+                propagators.getTextMapPropagator().inject(Context.current(), reqBuilder, new HttpRequestSetter());
+                HttpRequest request = reqBuilder.build();
+                HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
+                System.out.println(response.statusCode());
+                System.out.println(response.body());
 
-            Thread.sleep(5000);
+                Thread.sleep(5000);
+            }
+
         }
 
     }

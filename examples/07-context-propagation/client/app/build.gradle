@@ -24,6 +24,8 @@ dependencies {
     // OpenTelemetry SDK (implementation)
     implementation 'io.opentelemetry:opentelemetry-sdk:1.45.0'
 
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.45.0'
+
 
     // This dependency is used by the application.
     implementation libs.guava
