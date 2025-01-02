@@ -8,7 +8,10 @@ import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.Headers;
 
+import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.baggage.propagation.W3CBaggagePropagator;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
@@ -25,7 +28,17 @@ public class App {
 
     private static TextMapGetter<HttpExchange> TEXT_MAP_GETTER = new HttpRequestGetter();
 
+    private static Tracer  getTracer() {
+
+        OpenTelemetry otel = OpenTelemetryConfig.initialize();
+
+        Tracer tracer = otel.getTracer("exampleTracer");
+        return tracer;
+    }
+
     public static void main(String[] args) throws Exception {
+        Tracer tracer = getTracer();
+
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
         ContextPropagators propagators = ContextPropagators.create(
@@ -47,6 +60,9 @@ public class App {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            OpenTelemetry otel = OpenTelemetryConfig.initialize();
+
+            Tracer tracer = otel.getTracer("serverTracer");
             // debug - see headers
             System.out.println("=== headers");
             Iterable<String> headers = exchange.getRequestHeaders().keySet();
@@ -55,11 +71,11 @@ public class App {
                 System.out.println(String.format("%s: %s", header, exchange.getRequestHeaders().get(header)));
             }
 
-
-
             Context extractedContext = propagators.getTextMapPropagator().extract(Context.current(), exchange, TEXT_MAP_GETTER);
 
+            Span span = tracer.spanBuilder("/ GET").startSpan();;
             try(Scope scope = extractedContext.makeCurrent()) {
+                System.out.println("Do work");
                 
             } finally {
                 String response = "Hello from server";
@@ -67,6 +83,7 @@ public class App {
                 OutputStream os = exchange.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
+                span.end();
             }
 
         }
