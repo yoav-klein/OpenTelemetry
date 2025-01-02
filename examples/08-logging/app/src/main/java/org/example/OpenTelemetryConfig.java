@@ -36,7 +36,7 @@ public class OpenTelemetryConfig {
             .addSpanProcessor(spanProcessor)
             .build();
 
-        OtlpHttpLogRecordExporter exporter = OtlpHttpLogRecordExporter.builder().setEndpoint(endpoint).build();
+        OtlpHttpLogRecordExporter exporter = OtlpHttpLogRecordExporter.builder().setEndpoint(otelLoggingEndpoint).build();
         
         SdkLoggerProvider loggerProvider = SdkLoggerProvider.builder()
             .setResource(myApp)
