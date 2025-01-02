@@ -21,7 +21,7 @@ public class OpenTelemetryConfig {
         }
 
         String otelTracesEndpoint = otelExporterEndpoint + "/v1/traces";
-        String otelLoggingEndpoint = otelExporterEndpoint + "/v1/logging";
+        String otelLoggingEndpoint = otelExporterEndpoint + "/v1/logs";
        
         SimpleSpanProcessor spanProcessor = SimpleSpanProcessor.builder(OtlpHttpSpanExporter.builder()
                 .setEndpoint(otelTracesEndpoint)
