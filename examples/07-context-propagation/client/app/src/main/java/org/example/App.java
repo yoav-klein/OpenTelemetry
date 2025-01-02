@@ -24,10 +24,15 @@ public class App {
             .build();
 
         HttpRequest request = HttpRequest.newBuilder(URI.create(serverEndpoint)).build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-        System.out.println(response.statusCode());
-        System.out.println(response.body());
+        while(true) {
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+
+            Thread.sleep(5000);
+        }
 
     }
 }

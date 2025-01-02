@@ -1,11 +1,14 @@
 name: context-propagation
 services:
     server:
+        container_name: server
         build: server
 
     client:
+        container_name: client
         build: client
+        environment:
+            SERVER_ENDPOINT: "http://server:8080"
 
-    jaeger:
 
 
