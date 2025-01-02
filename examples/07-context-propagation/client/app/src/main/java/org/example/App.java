@@ -55,7 +55,8 @@ public class App {
         HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(URI.create(serverEndpoint));
 
         while(true) {
-            try(Scope scope = tracer.spanBuilder("exampleOperation").startSpan().makeCurrent()) {
+            Span clientSpan = tracer.spanBuilder("clientSpan").startSpan();
+            try(Scope scope = clientSpan.makeCurrent()) {
                 propagators.getTextMapPropagator().inject(Context.current(), reqBuilder, new HttpRequestSetter());
                 HttpRequest request = reqBuilder.build();
                 HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -64,6 +65,8 @@ public class App {
                 System.out.println(response.body());
 
                 Thread.sleep(5000);
+            } finally {
+                clientSpan.end();
             }
         }
     }
