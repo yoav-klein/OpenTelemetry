@@ -19,6 +19,11 @@ repositories {
 dependencies {
     // Use TestNG framework, also requires calling test.useTestNG() below
     testImplementation libs.testng
+    implementation 'io.opentelemetry:opentelemetry-api:1.45.0'
+
+    // OpenTelemetry SDK (implementation)
+    implementation 'io.opentelemetry:opentelemetry-sdk:1.45.0'
+
 
     // This dependency is used by the application.
     implementation libs.guava

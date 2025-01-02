@@ -3,13 +3,21 @@
  */
 package org.example;
 
-import java.io.IOException;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpClient.Redirect;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+
+import io.opentelemetry.context.propagation.ContextPropagators;
+import io.opentelemetry.context.propagation.TextMapPropagator;
+import io.opentelemetry.api.baggage.propagation.W3CBaggagePropagator;
+import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
+import io.opentelemetry.context.propagation.TextMapSetter;
+import io.opentelemetry.context.Context;
+
 
 public class App {
 
@@ -19,13 +27,21 @@ public class App {
             throw new IllegalArgumentException("No server endpoint");
         }
 
+        ContextPropagators propagators = ContextPropagators.create(
+            TextMapPropagator.composite(
+                W3CTraceContextPropagator.getInstance(), W3CBaggagePropagator.getInstance()
+            ));
+
         HttpClient client = HttpClient.newBuilder()
             .followRedirects(Redirect.NORMAL)
             .build();
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(serverEndpoint)).build();
-
+        HttpRequest.Builder reqBuilder = HttpRequest.newBuilder(URI.create(serverEndpoint));
+        
+        propagators.getTextMapPropagator().inject(Context.current(), reqBuilder, new HttpRequestSetter());
+        
         while(true) {
+            HttpRequest request = reqBuilder.build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
             System.out.println(response.statusCode());
@@ -34,5 +50,15 @@ public class App {
             Thread.sleep(5000);
         }
 
+    }
+
+    private static class HttpRequestSetter implements TextMapSetter<HttpRequest.Builder> {
+        @Override
+        public void set(HttpRequest.Builder builder, String key, String value) {
+            if(null == builder) {
+                return;
+            }
+            builder.setHeader(key, value);
+        }
     }
 }
