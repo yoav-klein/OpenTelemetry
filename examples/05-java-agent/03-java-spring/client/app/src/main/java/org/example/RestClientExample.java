@@ -12,18 +12,23 @@ import org.springframework.web.client.RestTemplate;
 
 
 public class RestClientExample {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         RestTemplate restTemplate = new RestTemplate();
 
         // Example: GET request to a public API
         String url = System.getenv("SERVER_ENDPOINT");
+
+        System.out.println("=== URL: " + url);
         
+        Thread.sleep(3000);
         while(true) {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            
-            System.out.println("Status Code: " + response.getStatusCode());
-            System.out.println("Response Body: " + response.getBody());
-            
+            try {
+                ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+                System.out.println("Status Code: " + response.getStatusCode());
+                System.out.println("Response Body: " + response.getBody());        
+            } catch(Exception e) {
+                System.out.println("Connect exception");
+            }
             Thread.sleep(2000);
         }
     }

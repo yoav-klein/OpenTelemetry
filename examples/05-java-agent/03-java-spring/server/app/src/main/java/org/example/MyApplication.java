@@ -7,17 +7,31 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @SpringBootApplication
 public class MyApplication {
 
-	@RequestMapping("/")
+    RestTemplate restTemplate = new RestTemplate();
+	
+    @RequestMapping("/")
 	String home() {
-		return "Hello World!";
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity("https://google.com", String.class);
+            System.out.println("Status Code: " + response.getStatusCode());
+            System.out.println("Response Body: " + response.getBody());
+            return response.getBody();
+        } catch(Exception e) {
+            return "Exception";
+        }
+
 	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyApplication.class, args);
 	}
 }
+
+

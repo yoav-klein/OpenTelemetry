@@ -1,17 +1,18 @@
 name: context-propagation
 services:
-    server:
-        container_name: server
+    spring-server:
+        container_name: spring-server
         build: server
         environment:
             OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
-    client:
-        container_name: client
+            OTEL_SERVICE_NAME: "server"
+    spring-client:
+        container_name: spring-client
         build: client
         environment:
-            SERVER_ENDPOINT: "http://server:8080"
+            SERVER_ENDPOINT: "http://spring-server:8080"
             OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
-
+            OTEL_SERVICE_NAME: "client"
     jaeger:
         image: jaegertracing/all-in-one:1.44
         container_name: jaeger
