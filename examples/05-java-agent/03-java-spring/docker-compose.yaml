@@ -1,16 +1,22 @@
 name: context-propagation
 services:
-    spring-server:
-        container_name: spring-server
-        build: server
+    backend:
+        container_name: backend
+        build: backend
         environment:
             OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
-            OTEL_SERVICE_NAME: "server"
-    spring-client:
+            OTEL_SERVICE_NAME: "backend"
+    frontend:
+        container_name: frontend
+        build: frontend
+        environment:
+            OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
+            OTEL_SERVICE_NAME: "frontend"
+    sprint-client:
         container_name: spring-client
         build: client
         environment:
-            SERVER_ENDPOINT: "http://spring-server:8080"
+            SERVER_ENDPOINT: "http://frontend:8080"
             OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4318"
             OTEL_SERVICE_NAME: "client"
     jaeger:
